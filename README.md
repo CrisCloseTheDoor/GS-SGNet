@@ -19,7 +19,8 @@ This process mainly do trajectory sample split and rotation, will generate the d
 ```
 python tools\ethucy\train_deterministic.py --gpu 0 --seed 1 --dataset ZARA1 --model SGNet --num_workers 0 --batch_size 128 --dropout 0.0 --lr 1e-4 --epochs 60
 ```
-The model will be saved at `tools\ethucy\checkpoints`, we suggest you create a folder `checkpoints\deteriministic` and put the saved model of phase1 here
+The model will be saved at `tools\ethucy\checkpoints`, we suggest you create a folder `checkpoints\deteriministic` and put the saved model of phase1 here.
+- TO DO: Put Pretrained model here
 
 
 ### Phase 2. Training the distribution predictor
@@ -27,12 +28,15 @@ The model will be saved at `tools\ethucy\checkpoints`, we suggest you create a f
 python tools\ethucy\train_gaussian.py --gpu 0 --seed 1 --pretrained_dir tools\ethucy\checkpoints\deterministic\[PATH_TO_Phase1_checkpoints] --checkpoint None --sample_method qmc --checkpoint_npsn None --dataset ZARA1 --model SGNet_Gaussian --num_workers 0 --batch_size 16 --dropout 0.0 --lr 1e-4 --epochs 60
 ```
 The model will be saved at `tools\ethucy\checkpoints`, We suggest you create a folder `checkpoints\distr_pretrained` and put the saved model of phase2 here
+- TO DO: Put Pretrained model here
+
 
 ### Phase 3. Training the NPSN module
 ```
 python tools\ethucy\train_gaussian.py --gpu 0 --seed 1 --pretrained_dir tools\ethucy\checkpoints\distr_pretrained\[PATH_TO_Phase2_checkpoints] --checkpoint None --sample_method npsn --checkpoint_npsn None --dataset ZARA1 --model SGNet_Gaussian --num_workers 0 --batch_size 16 --dropout 0.0 --lr 1e-4 --epochs 60
 ```
 The model will be saved at `tools\ethucy\checkpoints`.
+- TO DO: Put Pretrained model here
 
 ## Evaluate code
 ```
@@ -40,3 +44,11 @@ python \tools\ethucy\eval_gaussian.py --checkpoint tools\ethucy\checkpoints\dist
 ```
 
 ## Hyper parameters you can refer to
+Hyper params below may help to obtain a best possible training results:
+Datasets | ETH | HOTEL | UNIV | ZARA1 | ZARA2
+--- | --- | --- | --- | --- | --- 
+dropout | 0.5 | 0.3 | 0.0 | 0.0 | 0.0
+lr_rate | 5e-4 | 1e-4 | 1e-4 | 1e-4 | 1e-4
+Initializing method | Default | Default | nn.init.normal | nn.init.normal | nn.init.normal
+
+The seed we use are all `seed=1`
